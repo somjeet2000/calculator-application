@@ -34,7 +34,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CRED', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
                     sh 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD'
                     echo "DockerHub Login Successfull!!"
-                    sh 'docker push $OCKERHUB_REPO:$TAGE_NAME'
+                    sh 'docker push $DOCKERHUB_REPO:$TAGE_NAME'
                     echo "Image successfully pushed to docker hub"
                 }
             }
