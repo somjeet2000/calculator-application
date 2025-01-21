@@ -59,7 +59,7 @@ echo "stopping and removing existing container(If exists)....."
 docker stop calculator-application || true
 docker rm calculator-application || true
 echo "Running new docker container..."
-docker run -d --name calculator-application --p 5000:5000 $DOCKERHUB_REPO:$TAGE_NAME
+docker run -d --name calculator-application -p 5000:5000 $DOCKERHUB_REPO:$TAGE_NAME
 EOF'''
                 }
             }
