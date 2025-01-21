@@ -11,6 +11,7 @@ pipeline {
         stage('Code Checkout') {
             steps {
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/DivyaNaragund18/calculator-application.git']])
+                echo "Checkout is done"
             }
         }
     }
