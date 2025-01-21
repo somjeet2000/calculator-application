@@ -27,5 +27,17 @@ pipeline {
                 sh 'docker build -t $DOCKERHUB_REPO:$TAGE_NAME -f .'
             }
         }
+
+        // Stage 4 : Push to Docker Hub
+        stage('Push to Docker') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CRED', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
+                    sh 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD'
+                    echo "DockerHub Login Successfull!!"
+                    sh 'docker push $OCKERHUB_REPO:$TAGE_NAME'
+                    echo "Image successfully pushed to docker hub"
+                }
+            }
+        }
     }
 }
