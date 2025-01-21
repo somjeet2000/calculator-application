@@ -24,7 +24,7 @@ pipeline {
         // Stage 3 : Build Docker image
         stage('Build Docker image') {
             steps {
-                sh 'docker build -t $DOCKERHUB_REPO:$TAGE_NAME -f .'
+                sh 'docker build -t $DOCKERHUB_REPO:$TAGE_NAME -f Dockerfile .'
             }
         }
 
