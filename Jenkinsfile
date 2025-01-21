@@ -1,6 +1,12 @@
 pipeline {
     agent any
     
+    environment {
+        // Docker
+        DOCKERHUB_REPO = 'drnaragu/calculator-application'
+        TAGE_NAME = 'v1'
+    }
+    
     stages {
          // Stage 1 : clean workspace
         stage("Clean Workspace") {
@@ -18,7 +24,7 @@ pipeline {
         // Stage 3 : Build Docker image
         stage('Build Docker image') {
             steps {
-                sh 'docker build -t docker push drnaragu/calculator-application:v1 -f .'
+                sh 'docker build -t $DOCKERHUB_REPO:$TAGE_NAME -f .'
             }
         }
     }
