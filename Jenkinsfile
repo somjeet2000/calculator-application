@@ -2,9 +2,15 @@ pipeline {
     agent any
     
     stages {
-        stage("test"){
+        stage("Clean Workspace") {
             steps{
-                echo "My test"
+                cleanWs()
+            }
+        }
+
+        stage('Code Checkout') {
+            steps {
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/DivyaNaragund18/calculator-application.git']])
             }
         }
     }
