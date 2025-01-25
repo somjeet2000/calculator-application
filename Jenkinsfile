@@ -26,7 +26,7 @@ stages{
     //stage 3: Build Docker image
     stage('Build Docker Image'){
         steps{
-            sh 'docker build -t $DOCKERHUB_REPO:IMAGE_VERSION -f .'
+            sh 'docker build -t $DOCKERHUB_REPO:IMAGE_VERSION .'
         }
     }
 
