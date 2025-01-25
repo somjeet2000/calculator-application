@@ -8,7 +8,7 @@ pipeline {
 
         //EC2 instance details
         SSH_KEY = 'ssh-key-id-calculator-application'
-        REMOTE_HOST = '3.108.220.4'
+        REMOTE_HOST = '13.127.242.102'
         REMOTE_USER = 'ubuntu'
     }
     
