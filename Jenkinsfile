@@ -1,11 +1,12 @@
 pipeline{
 
-agents any
+agent any
 
 environment{
     DOCKERHUB_REPO='sandyp214/node-js-server-jenkins'
     IMAGE_VERSION='v1'
 }
+
 stages{
 
     //Stage 1 : Clean Workspace
