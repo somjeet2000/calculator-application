@@ -34,7 +34,7 @@ stages{
     stage('Push to DockerHub'){
         steps{
             withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CREDENTIALS', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
-                sh 'docker login -u $DOCKERHUB_USERNAME -p DOCKERHUB_PASSWORD'
+                sh 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD'
                 echo 'Dockerhub login Successful'
                 sh 'docker push $DOCKERHUB_REPO:IMAGE_VERSION'
                 echo 'Image successfully pushed to Dockerhub 🚴‍♀️'
