@@ -18,7 +18,7 @@ stages{
     //Stage 2: Code Checkout from GIT
     stage('Checkout Code'){
         steps{
-
+           checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/SandipyPatil/calculator-application.git']]) 
         }
     }
 
@@ -32,7 +32,12 @@ stages{
     //stage 4: Push to DockerHub
     stage('Push to DockerHub'){
         steps{
-
+            withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CREDENTIALS', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
+                sh 'docker login -u $DOCKERHUB_USERNAME -p DOCKERHUB_PASSWORD'
+                echo 'Dockerhub login Successful'
+                sh 'docker push $DOCKERHUB_REPO:IMAGE_VERSION'
+                echo 'Image successfully pushed to Dockerhub 🚴‍♀️'
+            }
         }
     }
 }
