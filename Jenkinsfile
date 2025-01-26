@@ -31,7 +31,7 @@ stages{
     //stage 3: Build Docker image
     stage('Build Docker Image'){
         steps{
-            sh 'docker build -t $DOCKERHUB_REPO:IMAGE_VERSION .'
+            sh 'docker build -t $DOCKERHUB_REPO:$IMAGE_VERSION .'
         }
     }
 
@@ -41,7 +41,7 @@ stages{
             withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CREDENTIALS', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
                 sh 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD'
                 echo 'Dockerhub login Successful'
-                sh 'docker push $DOCKERHUB_REPO:IMAGE_VERSION'
+                sh 'docker push $DOCKERHUB_REPO:$IMAGE_VERSION'
                 echo 'Image successfully pushed to Dockerhub 🚴‍♀️'
             }
         }
