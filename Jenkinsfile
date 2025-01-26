@@ -8,7 +8,7 @@ environment{
 
     //EC2 Instance Details
     SSH_KEY='ssh-key-id-simple-node-server'
-    REMOTE_HOST='65.1.132.94'
+    REMOTE_HOST='52.66.75.247'
     REMOTE_USER='ubuntu'
 }
 
