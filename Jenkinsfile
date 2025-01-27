@@ -2,17 +2,12 @@ pipeline {
     agent any
 
     environment {
-        //SonarQube
-        SONAR_HOST = 'http://13.201.40.242:9000/'
-        SONAR_PROJECTKEY = 'calculator-application'
-        //SONAR_TOKEN = 'Sonar-Token'
-
         // DockerHub
         DOCKERHUB_REPO = 'somjeetsrimani/calculator-application'
         IMAGE_TAG = 'v1'
 
         // App Server
-        SSH_KEY = 'SSH-KEY-ID-CALCULATOR-APPLICATION'
+        SSH_KEY = 'SSH-Key-ID-Calculator_Application'
         REMOTE_HOST = '13.233.78.128'
         REMOTE_USER = 'ubuntu'
 
@@ -37,19 +32,11 @@ pipeline {
         stage('Static Code Analysis') {
             steps {
                 script {
-                    def scannerHome = tool 'SonarScanner';
-                    withCredentials([string(credentialsId: 'Sonar-Token', variable: 'SONAR_TOKEN')]) {
-                        withSonarQubeEnv('Sonar-Server') {
-                            sh 'curl -u $SONAR_TOKEN: http://13.201.40.242:9000/api/server/version'
-                            sh """
-                                ${scannerHome}/bin/sonar-scanner \
-                                -Dsonar.projectKey="${SONAR_PROJECTKEY}" \
-                                -Dsonar.projectName="${SONAR_PROJECTKEY}" \
-                                -Dsonar.host.url="${SONAR_HOST}" \
-                                -Dsonar.token="${SONAR_TOKEN}" \
-                                -Dsonar.verbose=true
-                            """
-                        }
+                    def scannerHome = tool name: 'SonarScanner';
+                    withSonarQubeEnv('SonarServer') {
+                        sh "${scannerHome}/bin/sonar-scanner \
+                            -D sonar.projectKey=calculator-application \
+                            -D sonar.host.url=http://13.233.190.206:9000"
                     }
                 } 
             }
@@ -62,9 +49,12 @@ pipeline {
                     timeout(time: 10, unit: 'MINUTES') {
                         def qualityGate = waitForQualityGate()
                         if (qualityGate.status != 'OK') {
-                            error "Pipeline aborted due to quality gate failure: ${qualityGate.status}"
-                        } else {
-                            echo "SonarQube quality gate passed! 🎉"
+                            echo "${qualityGate.status}"
+                            error "Quality Gate failed: ${qualityGate.status}"
+                        }
+                        else {
+                            echo "${qualityGate.status}"
+                            echo "SonarQube Quality Gates Passed"
                         }
                     }
                 }
@@ -103,7 +93,7 @@ pipeline {
         // Stage 7 - Push to DockerHub
         stage('Push to DockerHub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CRED', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
+                withCredentials([usernamePassword(credentialsId: 'Dockerhub_Credentials', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
                     sh 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD'
                     echo 'DockerHub Login Successful 🎉'
                     sh 'docker push $DOCKERHUB_REPO:$IMAGE_TAG'
