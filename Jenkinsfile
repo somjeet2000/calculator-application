@@ -63,8 +63,9 @@ pipeline {
         //Satge 5 : Run Test cases
         stage('Run Test cases') {
             agent {
-                docker { 
-                    image 'node:16' 
+               docker {
+                    image 'node:20-alpine'
+                    args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
             steps {
@@ -72,8 +73,8 @@ pipeline {
                     try {
                         sh 'npm install'
                         sh 'npm test'
-                        echo "All Test cases passed👍"
-                    } catch (Exception e){
+                        echo 'All Test cases passed👍'
+                    } catch (Exception e) {
                         throw e
                     }  
                 }
