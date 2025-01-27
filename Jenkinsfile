@@ -46,7 +46,7 @@ pipeline {
                                 -Dsonar.projectKey=${SONAR_PROJECTKEY} \
                                 -Dsonar.projectName=${SONAR_PROJECTKEY} \
                                 -Dsonar.host.url=${SONAR_HOST} \
-                                -Dsonar.login=${SONAR_TOKEN}
+                                -Dsonar.verbose=true
                             """
                         }
                     }
