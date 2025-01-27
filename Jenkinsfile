@@ -24,12 +24,12 @@ pipeline {
             steps {
                 script {
                     // Check if Branch is Other  , and if other is empty
-                    if (params.Branch == 'Other' && !params.Other?.trim()){
+                    if (params.Branch == 'Other' && !params.Other?.trim()) {
                         error "Branch Need to be mentioned when selected 'Other' as Branch😁"
                     }
 
                     //Determine the selected Branch
-                    def branchCheckout = params.Branch = 'Other' ? params.Other : params.Branch
+                    def branchCheckout = params.Branch == 'Other' ? params.Other : params.Branch
 
                     //Standardize the Branch
                     echo "Branch to Build ${branchCheckout}"
