@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         //SonarQube
-        SONAR_HOST = 'http://52.66.202.194:9000/'
+        SONAR_HOST = 'http://13.201.40.242:9000/'
         SONAR_PROJECTKEY = 'calculator-application'
 
         // DockerHub
@@ -41,11 +41,11 @@ pipeline {
                         withSonarQubeEnv('Sonar-Server') {
                             sh 'echo ${scannerHome}'
                             sh '''
-                                ${scannerHome}/bin/sonar-scanner --version\
-                                ${scannerHome}/bin/sonar-scanner\
-                                -Dsonar.projectKey=${SONAR_PROJECTKEY}\
-                                -Dsonar.projectName=${SONAR_PROJECTKEY}\
-                                -Dsonar.host.url=${SONAR_HOST}\
+                                ${scannerHome}/bin/sonar-scanner --version \
+                                ${scannerHome}/bin/sonar-scanner \
+                                -Dsonar.projectKey=${SONAR_PROJECTKEY} \
+                                -Dsonar.projectName=${SONAR_PROJECTKEY} \
+                                -Dsonar.host.url=${SONAR_HOST} \
                                 -Dsonar.login=${SONAR_TOKEN}
                             '''
                         }
