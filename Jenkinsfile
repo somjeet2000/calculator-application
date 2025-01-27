@@ -41,14 +41,14 @@ pipeline {
                     withCredentials([string(credentialsId: 'Sonar-Token', variable: 'SONAR_TOKEN')]) {
                         withSonarQubeEnv('Sonar-Server') {
                             sh 'curl -u $SONAR_TOKEN: http://13.201.40.242:9000/api/server/version'
-                            sh '''
+                            sh """
                                 $scannerHome/bin/sonar-scanner \
                                 -Dsonar.projectKey=$SONAR_PROJECTKEY \
                                 -Dsonar.projectName=$SONAR_PROJECTKEY \
                                 -Dsonar.host.url=$SONAR_HOST \
                                 -Dsonar.token=$SONAR_TOKEN \
                                 -Dsonar.verbose=true
-                            '''
+                            """
                         }
                     }
                 } 
