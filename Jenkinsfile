@@ -8,7 +8,7 @@ pipeline {
 
         // App Server
         SSH_KEY = 'SSH-Key-ID-Calculator_Application'
-        REMOTE_HOST = '13.233.78.128'
+        REMOTE_HOST = '35.154.214.145'
         REMOTE_USER = 'ubuntu'
 
     }
