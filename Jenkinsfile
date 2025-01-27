@@ -61,11 +61,11 @@ pipeline {
             }
         }
 
-        // Stage 5 - Run Test Cases
+        // Stage 5 - Run test cases
         stage('Run Tests') {
             agent {
-                docker {
-                    image node:20-apline
+               docker {
+                    image 'node:20-alpine'
                     args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
@@ -74,7 +74,7 @@ pipeline {
                     try {
                         sh 'npm install'
                         sh 'npm test'
-                        echo '🎉 All Test Cases Passed!!'
+                        echo "👍 All Test Cases Passed!"
                     } catch (Exception e) {
                         currentBuild.result = 'FAILURE'
                         throw e
