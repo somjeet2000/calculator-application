@@ -123,18 +123,18 @@ pipeline {
 
                     selectedservers.each {server ->
                     sshagent([SSH_KEY]) {
-                    sh '''echo "Connecting with the server ${server}"
-ssh -o StrictHostKeyChecking=no $REMOTE_USER@${server} <<EOF
-echo "Server connected....."
-echo "Pulling latest docker image....."
-echo "Using image : $DOCKERHUB_REPO:$TAGE_NAME"
-docker pull $DOCKERHUB_REPO:$TAGE_NAME
-echo "stopping and removing existing container(If exists)....."
+                    sh """echo 'Connecting with the server : ${server}'
+ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${server} <<EOF
+echo 'Server connected.....'
+echo 'Pulling latest docker image.....'
+echo 'Using image : ${DOCKERHUB_REPO}:${TAGE_NAME}'
+docker pull ${DOCKERHUB_REPO}:${TAGE_NAME}
+echo 'stopping and removing existing container(If exists).....'
 docker stop calculator-application || true
 docker rm calculator-application || true
-echo "Running new docker container..."
-docker run -d --name calculator-application -p 5000:5000 $DOCKERHUB_REPO:$TAGE_NAME
-EOF'''
+echo 'Running new docker container...'
+docker run -d --name calculator-application -p 5000:5000 ${DOCKERHUB_REPO}:${TAGE_NAME}
+EOF"""
                         }
                     }
                 }
