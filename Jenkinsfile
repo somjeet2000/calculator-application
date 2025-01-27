@@ -36,18 +36,14 @@ pipeline {
         stage('Static Code Analysis') {
             steps {
                 script {
-                    def scannerHome = tool 'Sonar-Scanner'
+                    def scannerHome = tool 'SonarScanner'
                     withCredentials([string(credentialsId: 'Sonar-Token', variable: 'SONAR_TOKEN')]) {
                         withSonarQubeEnv('Sonar-Server') {
-                            sh 'echo ${scannerHome}'
-                            sh '''
-                                ${scannerHome}/bin/sonar-scanner --version \
-                                ${scannerHome}/bin/sonar-scanner \
+                            sh '''${scannerHome}/bin/sonar-scanner \
                                 -Dsonar.projectKey=${SONAR_PROJECTKEY} \
                                 -Dsonar.projectName=${SONAR_PROJECTKEY} \
                                 -Dsonar.host.url=${SONAR_HOST} \
-                                -Dsonar.login=${SONAR_TOKEN}
-                            '''
+                                -Dsonar.login=${SONAR_TOKEN}'''
                         }
                     }
                 }
