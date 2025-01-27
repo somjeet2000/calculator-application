@@ -8,7 +8,6 @@ pipeline {
 
         // App Server
         SSH_KEY = 'SSH-Key-ID-Calculator_Application'
-        REMOTE_HOST = '35.154.214.145'
         REMOTE_USER = 'ubuntu'
 
     }
@@ -24,7 +23,21 @@ pipeline {
         // Stage 2 - Code checkout
         stage('Code Checkout') {
             steps {
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/somjeet2000/calculator-application.git']])
+                script {
+                    // Check if Branch is selected as Other, and Other is empty
+                    if (params.Branch == 'Other' && !params.Other?.trim()) {
+                        error "Branch Name is required when selected 'Other' for Branch!"
+                    }
+
+                    // Determine the branch to select
+                    def branchToCheckout = params.Branch == 'Other' ? params.Other : params.Branch
+                    echo "Branch to Build: ${branchToCheckout}"
+                    
+                    checkout scmGit(
+                        branches: [[name: "*/${branchToCheckout}"]], 
+                        extensions: [], 
+                        userRemoteConfigs: [[url: 'https://github.com/somjeet2000/calculator-application.git']])
+                }
             }
         }
 
@@ -103,11 +116,16 @@ pipeline {
         }
 
         // Stage 8 - Deploy to Application Servers
-        stage('Deploy to Server') {
+        stage('Deploy to Servers') {
             steps {
-                sshagent([SSH_KEY]) {
-                    sh '''echo "Connecting with the server $REMOTE_HOST"
-ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST <<EOF
+                script {
+                    echo "Selected Servers: ${params.Servers}"
+                    def selectedServers = params.Servers.split(',')
+
+                    selectedServers.each {server -> 
+                        sshagent([SSH_KEY]) {
+                            sh '''echo "Connecting with the server $server"
+ssh -o StrictHostKeyChecking=no $REMOTE_USER@$server <<EOF
 echo "🎉 Server Connected..."
 echo "🚀 Pulling latest Docker image..."
 echo "Using image: $DOCKERHUB_REPO:$IMAGE_TAG"
@@ -118,6 +136,8 @@ docker rm calculator-application || true
 echo "🏃‍♂️‍➡️ Running new container..."
 docker run -d --name calculator-application -p 5000:5000 $DOCKERHUB_REPO:$IMAGE_TAG
 EOF'''
+                        }
+                    }
                 }
             }
         }
