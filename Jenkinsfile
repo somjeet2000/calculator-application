@@ -25,15 +25,18 @@ pipeline {
                 script {
                     // Check if Branch is Other  , and if other is empty
                     if (params.Branch == 'Other' && !params.Other?.trim()) {
-                        error "Branch Need to be mentioned when selected 'Other' as Branch😁"
+                        error "Branch Name is required when selected 'Other' for Branch!"
                     }
 
                     //Determine the selected Branch
-                    def branchCheckout = params.Branch == 'Other' ? params.Other : params.Branch
-
+                    def branchToCheckout = params.Branch == 'Other' ? params.Other : params.Branch
+                    
                     //Standardize the Branch
-                    echo "Branch to Build ${branchCheckout}"
-                    checkout scmGit(branches: [[name: "*/${branchCheckout}"]], extensions: [], userRemoteConfigs: [[url: 'https://github.com/DivyaNaragund18/calculator-application.git']])
+                    echo "Branch to Build ${branchToCheckout}"
+                    checkout scmGit(
+                        branches: [[name: "*/${branchToCheckout}"]], 
+                        extensions: [], 
+                        userRemoteConfigs: [[url: 'https://github.com/DivyaNaragund18/calculator-application.git']])
                 }
                 
             }
