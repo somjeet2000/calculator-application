@@ -5,7 +5,7 @@ pipeline {
         //SonarQube
         SONAR_HOST = 'http://13.201.40.242:9000/'
         SONAR_PROJECTKEY = 'calculator-application'
-        SONAR_TOKEN = 'Sonar-Token'
+        //SONAR_TOKEN = 'Sonar-Token'
 
         // DockerHub
         DOCKERHUB_REPO = 'somjeetsrimani/calculator-application'
@@ -38,8 +38,9 @@ pipeline {
             steps {
                 script {
                     def scannerHome = tool 'SonarScanner';
-                    // withCredentials([string(credentialsId: 'Sonar-Token', variable: 'SONAR_TOKEN')]) {
-                        withSonarQubeEnv() {
+                    withCredentials([string(credentialsId: 'Sonar-Token', variable: 'SONAR_TOKEN')]) {
+                        withSonarQubeEnv('Sonar-Server') {
+                            sh "curl -u $SONAR_TOKEN: http://13.201.40.242:9000/api/server/version"
                             sh """
                                 ${scannerHome}/bin/sonar-scanner \
                                 -Dsonar.projectKey=${SONAR_PROJECTKEY} \
@@ -48,7 +49,7 @@ pipeline {
                                 -Dsonar.login=${SONAR_TOKEN}
                             """
                         }
-                    // }
+                    }
                 } 
             }
         }
