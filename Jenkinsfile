@@ -14,7 +14,7 @@ pipeline {
     
     stages {
          // Stage 1 : clean workspace
-        stage("Clean Workspace") {
+        stage('Clean Workspace') {
             steps{
                 cleanWs()
             }
@@ -23,22 +23,23 @@ pipeline {
         stage('Code Checkout') {
             steps {
                 script {
-                    // Check if Branch is Other  , and if other is empty
-                    if (params.Branch == 'Other' && !params.Other?.trim()){
-                        error "Branch Need to be mentioned when selected 'Other' as Branch😁"
+                    // Check if Branch is Other, and if Other is empty
+                    if (params.Branch == 'Other' && !params.Other?.trim()) {
+                        error "Branch Name is required when selected 'Other' for Branch!"
                     }
 
-                    //Determine the selected Branch
-                    def branchCheckout = params.Branch = 'Other' ? params.Other : params.Branch
+                    // Determine the selected Branch
+                    def branchToCheckout = params.Branch == 'Other' ? params.Other : params.Branch
 
-                    //Standardize the Branch
-                    echo "Branch to Build ${branchCheckout}"
-                    checkout scmGit(branches: [[name: "*/${branchCheckout}"]], extensions: [], userRemoteConfigs: [[url: 'https://github.com/DivyaNaragund18/calculator-application.git']])
+                    // Standardize the Branch
+                    echo "Branch to Build ${branchToCheckout}"
+                    checkout scmGit(
+                        branches: [[name: "*/${branchToCheckout}"]], 
+                        extensions: [], 
+                        userRemoteConfigs: [[url: 'https://github.com/DivyaNaragund18/calculator-application.git']])
                 }
-                
             }
         }
-
         // Stage 3 : Static Code Analysis
         stage('Static code analysis') {
             steps{
