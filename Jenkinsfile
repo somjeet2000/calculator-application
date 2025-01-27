@@ -123,8 +123,8 @@ pipeline {
 
                     selectedservers.each {server ->
                     sshagent([SSH_KEY]) {
-                    sh '''echo "Connecting with the server $server"
-ssh -o StrictHostKeyChecking=no $REMOTE_USER@$server <<EOF
+                    sh '''echo "Connecting with the server ${server}"
+ssh -o StrictHostKeyChecking=no $REMOTE_USER@${server} <<EOF
 echo "Server connected....."
 echo "Pulling latest docker image....."
 echo "Using image : $DOCKERHUB_REPO:$TAGE_NAME"
