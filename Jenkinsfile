@@ -22,7 +22,20 @@ pipeline {
         // Stage 2 : Code Checkout
         stage('Code Checkout') {
             steps {
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/DivyaNaragund18/calculator-application.git']])
+                script {
+                    // Check if Branch is Other  , and if other is empty
+                    if (params.Branch == 'Other' && !params.Other?.trim()){
+                        error "Branch Need to be mentioned when selected 'Other' as Branch😁"
+                    }
+
+                    //Determine the selected Branch
+                    def branchCheckout = params.Branch = 'Other' ? params.Other : params.Branch
+
+                    //Standardize the Branch
+                    echo "Branch to Build ${branchCheckout}"
+                    checkout scmGit(branches: [[name: "*/${branchCheckout}"]], extensions: [], userRemoteConfigs: [[url: 'https://github.com/DivyaNaragund18/calculator-application.git']])
+                }
+                
             }
         }
 
@@ -103,9 +116,14 @@ pipeline {
         // Stage 8 : Deploy image to EC2 Instance Application Server
         stage('Deploy to Application Server') {
             steps {
-                sshagent([SSH_KEY]){
-                    sh '''echo "Connecting with the server $REMOTE_HOST"
-ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST <<EOF
+                script {
+                    echo "Selected Servers: ${params.Severs}"
+                    def selectedservers = params.Servers.split(',')
+
+                    selectedservers.each {server ->
+                    sshagent([SSH_KEY]) {
+                    sh '''echo "Connecting with the server $server"
+ssh -o StrictHostKeyChecking=no $REMOTE_USER@$server <<EOF
 echo "Server connected....."
 echo "Pulling latest docker image....."
 echo "Using image : $DOCKERHUB_REPO:$TAGE_NAME"
@@ -116,6 +134,8 @@ docker rm calculator-application || true
 echo "Running new docker container..."
 docker run -d --name calculator-application -p 5000:5000 $DOCKERHUB_REPO:$TAGE_NAME
 EOF'''
+                        }
+                    }
                 }
             }
         }
