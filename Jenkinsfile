@@ -32,7 +32,7 @@ pipeline {
                     // Determine the branch to select
                     def branchToCheckout = params.Branch == 'Other' ? params.Other : params.Branch
                     echo "Branch to Build: ${branchToCheckout}"
-                    
+
                     checkout scmGit(
                         branches: [[name: "*/${branchToCheckout}"]], 
                         extensions: [], 
@@ -124,8 +124,8 @@ pipeline {
 
                     selectedServers.each {server -> 
                         sshagent([SSH_KEY]) {
-                            sh '''echo "Connecting with the server $server"
-ssh -o StrictHostKeyChecking=no $REMOTE_USER@$server <<EOF
+                            sh '''echo "Connecting with the server ${server}"
+ssh -o StrictHostKeyChecking=no $REMOTE_USER@${server} <<EOF
 echo "🎉 Server Connected..."
 echo "🚀 Pulling latest Docker image..."
 echo "Using image: $DOCKERHUB_REPO:$IMAGE_TAG"
